@@ -1,29 +1,38 @@
-#include "Notification.h"
+#include "Library.h"
+#include<iostream>
 
+using namespace std;
 
-int main() {
-    NotificationManager manager;
+int main()
+{
+   try {
+        Library library;
 
-    manager.setDefaultChannel(sendEmail);
+        //ADD book
+    
+        library.addBook( Book("Book1","Author1","1234543434"));
+        library.addBook(Book("Book2","Author2","3435143545"));
 
-    map<string, string> employeePreferences = {
-        {"HR", "email"},
-        {"Events", "sms"},
-        {"IT", "push"}
-    };
+        //ADD MEMBERs
+        LibraryMember member1("1", "Arbaj");
+        LibraryMember member2("2", "Arya");
+        library.addMember(member1);
+        library.addMember(member2);
 
+        vector<Book> searchResults = library.searchBooks("Book1");
+        if (!searchResults.empty()) {
+            member1.borrowBook(searchResults[0]);
+        }
 
-    cout << "HR Notification: " << endl;
-    manager.notify("this message from HR side.", employeePreferences["HR"]);
+        cout << "After returning book:" << endl;
+        library.displayBooks();
 
-    cout << "\nEvent Reminder:" << endl;
-    manager.notify("this message from Events side.", employeePreferences["Events"]);
+         } catch (const LibraryException &e) {
+        cerr << "Error: " << e.what() << endl;
+    }
+        
 
-    cout << "\nSystem Alert:" << endl;
-    manager.notify("Scheduled server downtime from 11 PM to 3 AM tonight. Please plan accordingly.", employeePreferences["IT"]);
-
-    cout << "\nUnknown :" << endl;
-    manager.notify("This is a default notification for an unknown.");
+   
 
     return 0;
 }
